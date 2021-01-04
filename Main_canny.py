@@ -47,7 +47,7 @@ numero_clstr = []
 jumlah_frame = 0
 
 
-my_file = open("D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\caltech-lanes\lists\cordova1-list.txt", "r")
+my_file = open("D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\program\caltech-lanes\lists\cordova1-list.txt", "r")
 content = my_file.read()
 content_list = content.split("\n")
 my_file.close()
@@ -240,16 +240,16 @@ for foto in range(len(content_list)):
         ins = ins+1
     
     cv2.imshow('crop',crop)
-    cv2.imshow('edges',edges)
+    #cv2.imshow('edges',edges)
     #time.sleep(5)
     
     #save gambar hasil
-    path_coba = r'D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\hasil_canny'
-    os.chdir(path_coba)
-    a_str = str(foto)
-    cv2.imwrite("hasil"+a_str+".png",crop)
-    path_coba = r'D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset'
-    os.chdir(path_coba)
+    #path_coba = r'D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\hasil_canny'
+    #os.chdir(path_coba)
+    #a_str = str(foto)
+    #cv2.imwrite("hasil"+a_str+".png",crop)
+    #path_coba = r'D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\program'
+    #os.chdir(path_coba)
     
     #save vicdeo
     #out.write(crop)
