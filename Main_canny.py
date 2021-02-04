@@ -219,12 +219,12 @@ for foto in range(len(content_list)):
                 jarak_titik = distance.euclidean(nilai_min, nilai_max)
                 if jarak_titik > 100:
                     image = cv2.polylines(crop, [garis], isClosed, color, thickness)
-                    i_str = str(final_clstr[ins][0])
-                    font = cv2.FONT_HERSHEY_SIMPLEX 
-                    org = (y_a[:,0][len(y_a)-1],x_a[:,0][len(y_a)-1])
-                    fontScale = 0.5
-                    color = (0, 0, 0) 
-                    cv2.putText(crop, i_str , org, font, fontScale, color, 1, cv2.LINE_AA)
+                    #i_str = str(final_clstr[ins][0])
+                    #font = cv2.FONT_HERSHEY_SIMPLEX 
+                    #org = (y_a[:,0][len(y_a)-1],x_a[:,0][len(y_a)-1])
+                    #fontScale = 0.5
+                    #color = (0, 0, 0) 
+                    #cv2.putText(crop, i_str , org, font, fontScale, color, 1, cv2.LINE_AA)
                     #cv2.drawContours(crop, [gabung], 0, (0, 0, 255), 1)   
                     
             else:
