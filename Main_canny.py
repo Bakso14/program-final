@@ -36,8 +36,9 @@ img = np.zeros((25,512,3), np.uint8)
 cv2.namedWindow('thresh')
 cv2.createTrackbar(cannyH, 'thresh',143,255,nothing)
 cv2.createTrackbar(cannyL, 'thresh',255,255,nothing)
+
 cv2.createTrackbar(co, 'thresh',6,360,nothing)
-cv2.createTrackbar(th_sse, 'thresh',100,500,nothing)
+cv2.createTrackbar(th_sse, 'thresh',17,500,nothing)
 
 kernel = np.ones((5,5),np.uint8)
 kernel_er = np.ones((3,3),np.uint8)
@@ -59,9 +60,9 @@ my_file.close()
 #out = cv2.VideoWriter('hasil.mp4',fourcc, number_frame,video_size)
 
 start = time.time()
-for foto in range(len(content_list)):
-#while(1):
-    #foto = 6
+#for foto in range(len(content_list)):
+while(1):
+    foto = 23
 
     jumlah_frame = jumlah_frame + 1
     
@@ -214,18 +215,20 @@ for foto in range(len(content_list)):
             titik_banding = 100
             pembanding = p(titik_banding)
 
-            #print(ins,"Hasil",len(local_minmax))
+            print(ins,"Hasil",len(local_minmax))
             if len(local_minmax) <= 1 or len(local_minmax) > 30:
                 jarak_titik = distance.euclidean(nilai_min, nilai_max)
                 if jarak_titik > 100:
+                    print(ins)
                     image = cv2.polylines(crop, [garis], isClosed, color, thickness)
                     #i_str = str(final_clstr[ins][0])
-                    #font = cv2.FONT_HERSHEY_SIMPLEX 
-                    #org = (y_a[:,0][len(y_a)-1],x_a[:,0][len(y_a)-1])
-                    #fontScale = 0.5
-                    #color = (0, 0, 0) 
+                    i_str = str(len(local_minmax))
+                    font = cv2.FONT_HERSHEY_SIMPLEX 
+                    org = (y_a[:,0][len(y_a)-1],x_a[:,0][len(y_a)-1])
+                    fontScale = 0.5
+                    color = (0, 0, 0) 
                     #cv2.putText(crop, i_str , org, font, fontScale, color, 1, cv2.LINE_AA)
-                    #cv2.drawContours(crop, [gabung], 0, (0, 0, 255), 1)   
+                    cv2.drawContours(crop, [gabung], 0, (0, 0, 255), 1)   
                     
             else:
                 del final_clstr[ins]
@@ -240,11 +243,11 @@ for foto in range(len(content_list)):
         ins = ins+1
     
     cv2.imshow('crop',crop)
-    #cv2.imshow('edges',edges)
+    cv2.imshow('edges',edges)
     #time.sleep(5)
     
     #save gambar hasil
-    #path_coba = r'D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\hasil_canny'
+    #path_coba = r'D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset\hasil_canny_washington2'
     #os.chdir(path_coba)
     #a_str = str(foto)
     #cv2.imwrite("hasil"+a_str+".png",crop)
@@ -258,7 +261,7 @@ for foto in range(len(content_list)):
     if k == 27:
         break
 
-print(time.time()-start)
-print(len(content_list)/(time.time()-start))
+#print(time.time()-start)
+#print(len(content_list)/(time.time()-start))
 #out.release()
 cv2.destroyAllWindows()
