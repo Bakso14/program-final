@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import time
 import os
-from math import atan2, cos, sin, pi
+from math import atan2, cos, sin, pi, degrees
 from numpy import diff,sign
 from scipy.spatial import distance
 import math
@@ -27,6 +27,11 @@ def getOrientation(pts, img):
     y2 = cntr[1] + length*sin(angle)
     #cv2.line(img,cntr,(int(x2),int(y2)),(0,255,0),1,cv2.LINE_AA)
     return angle
+
+def sudutduatitik(titik):
+    xDiff = titik[2] - titik[0]
+    yDiff = titik[3] - titik[1]
+    return degrees(atan2(yDiff, xDiff))
 
 
 cannyH = 'canny high'
@@ -95,23 +100,26 @@ for foto in range(len(content_list)):
     linesP = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, None, 100, 10)
     
     v = 0
+    h = 0
     if linesP is not None:
         cluster_orientation = np.zeros((2,len(linesP)),np.int16) #connected component orientation
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (255,255,255), 3, cv2.LINE_AA)
-            cv2.line(cdstP_sementara, (l[0], l[1]), (l[2], l[3]), (255,255,255), 3, cv2.LINE_AA)
-            cdstP_sementara = cv2.cvtColor(cdstP_sementara,cv2.COLOR_BGR2GRAY)
-            single_contours = cv2.findContours(cdstP_sementara, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
-            cdstP_sementara = cv2.cvtColor(gambar_kosong, cv2.COLOR_GRAY2BGR)
-            contours.append(single_contours[0])
-            a = getOrientation(contours[i], crop)
-            a_derajat = 360*a/(2*pi)
-            if ((a_derajat < -15 and a_derajat > -30 ) or (a_derajat > 9.5 and a_derajat < 25)):
-                cluster_orientation[0,v] = a_derajat
-                cluster_orientation[1,v] = i
-                v = v+1
-                #cv2.drawContours(crop, contours, i, (0, 0, 255), 1) 
+            if ((sudutduatitik(l) < -15 and sudutduatitik(l) > -30 ) or (sudutduatitik(l) > 9.5 and sudutduatitik(l) < 25)):
+                cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (255,255,255), 3, cv2.LINE_AA)
+                cv2.line(cdstP_sementara, (l[0], l[1]), (l[2], l[3]), (255,255,255), 3, cv2.LINE_AA)
+                cdstP_sementara = cv2.cvtColor(cdstP_sementara,cv2.COLOR_BGR2GRAY)
+                single_contours = cv2.findContours(cdstP_sementara, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
+                cdstP_sementara = cv2.cvtColor(gambar_kosong, cv2.COLOR_GRAY2BGR)
+                contours.append(single_contours[0])
+                a = getOrientation(contours[h], crop)
+                a_derajat = 360*a/(2*pi)
+                if ((a_derajat < -15 and a_derajat > -30 ) or (a_derajat > 9.5 and a_derajat < 25)):
+                    cluster_orientation[0,v] = a_derajat
+                    cluster_orientation[1,v] = h
+                    v = v+1
+                h = h+1
+                    #cv2.drawContours(crop, contours, i, (0, 0, 255), 1) 
     cdstP = cv2.cvtColor(cdstP,cv2.COLOR_BGR2GRAY)
     
     #Pengklasteran berdasarkan orientasi dan SSE
