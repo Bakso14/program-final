@@ -25,7 +25,7 @@ def getOrientation(pts, img):
     length = 100
     x2 = cntr[0] + length*cos(angle)
     y2 = cntr[1] + length*sin(angle)
-    #cv2.line(img,cntr,(int(x2),int(y2)),(0,255,0),1,cv2.LINE_AA)
+    cv2.line(img,cntr,(int(x2),int(y2)),(0,255,0),1,cv2.LINE_AA)
     return angle
 
 def sudutduatitik(titik):
@@ -55,21 +55,21 @@ numero_clstr = []
 jumlah_frame = 0
 
 
-my_file = open("D:\Mata_kuliah_s2\Thesis\Mulai\Video_jalan\Taman_Alumni\list.txt", "r")
+my_file = open("D:\Mata_kuliah_s2\Thesis\Mulai\Video_jalan\Video_1_\list.txt", "r")
 content = my_file.read()
 content_list = content.split("\n")
 my_file.close()
 
 #SAVE
 path_parent = "D:\Mata_kuliah_s2\Thesis\Mulai\Program\paka_dataset"
-nama_folder = "hasil_data_its_taman_alumni"
+nama_folder = "hasil_data_its_orde1"
 path_coba = os.path.join(path_parent,nama_folder)
-#os.mkdir(path_coba)
+os.mkdir(path_coba)
 
 start = time.time()
 for foto in range(len(content_list)):
 #while(1):
-    #foto = 100
+    #foto = 3
 
     jumlah_frame = jumlah_frame + 1
     
@@ -105,7 +105,7 @@ for foto in range(len(content_list)):
         cluster_orientation = np.zeros((2,len(linesP)),np.int16) #connected component orientation
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            if ((sudutduatitik(l) < -15 and sudutduatitik(l) > -30 ) or (sudutduatitik(l) > 9.5 and sudutduatitik(l) < 25)):
+            if ((sudutduatitik(l) < -15 and sudutduatitik(l) > -30 ) or (sudutduatitik(l) > 50 and sudutduatitik(l) < 70)):
                 cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (255,255,255), 3, cv2.LINE_AA)
                 cv2.line(cdstP_sementara, (l[0], l[1]), (l[2], l[3]), (255,255,255), 3, cv2.LINE_AA)
                 cdstP_sementara = cv2.cvtColor(cdstP_sementara,cv2.COLOR_BGR2GRAY)
@@ -114,7 +114,13 @@ for foto in range(len(content_list)):
                 contours.append(single_contours[0])
                 a = getOrientation(contours[h], crop)
                 a_derajat = 360*a/(2*pi)
-                if ((a_derajat < -15 and a_derajat > -30 ) or (a_derajat > 9.5 and a_derajat < 25)):
+                i_str = str(sudutduatitik(l))
+                font = cv2.FONT_HERSHEY_SIMPLEX 
+                org = (l[2],l[3])
+                fontScale = 0.5
+                color = (255, 255, 0) 
+                cv2.putText(crop, i_str , org, font, fontScale, color, 1, cv2.LINE_AA)
+                if ((a_derajat < -15 and a_derajat > -30 ) or (a_derajat > -130 and a_derajat < -110)):
                     cluster_orientation[0,v] = a_derajat
                     cluster_orientation[1,v] = h
                     v = v+1
@@ -160,7 +166,7 @@ for foto in range(len(content_list)):
                 numero_clstr[a].append(jumlah_frame)
                 if len(final_clstr[a]) > 1 and len(final_clstr[a]) < R:
                     gabung = np.concatenate((final_clstr[a][1:len(final_clstr[a])]), axis=0)
-                    z = np.polyfit(gabung[:,0,1],gabung[:,0,0],3 ,full = True)
+                    z = np.polyfit(gabung[:,0,1],gabung[:,0,0],1 ,full = True)
                     if z[1] < threshold_SSE:
                         tanda = 0
                         final_clstr[a][0] = (final_clstr[a][0] * (len(final_clstr[a])-1)+cluster_orientation[0,connected_component])/len(final_clstr[a])
@@ -204,7 +210,7 @@ for foto in range(len(content_list)):
     while ins < len(final_clstr):
         if len(final_clstr[ins]) > 1 and final_clstr[ins][0] != 0 :#and ((final_clstr[ins][0] < -15 and final_clstr[ins][0] > -30 ) or (final_clstr[ins][0] > 10 and final_clstr[ins][0] < 25)) :
             gabung = np.concatenate((final_clstr[ins][1:len(final_clstr[ins])]), axis=0)
-            z = np.polyfit(gabung[:,0,1],gabung[:,0,0],3 ,full = True)
+            z = np.polyfit(gabung[:,0,1],gabung[:,0,0],1 ,full = True)
             p = np.poly1d(z[0])
             x_a = np.arange(min(gabung[:,0,1]),max(gabung[:,0,1]))
             x_a = x_a.reshape((-1, 1))
